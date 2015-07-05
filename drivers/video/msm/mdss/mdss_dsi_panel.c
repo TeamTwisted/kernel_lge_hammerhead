@@ -321,9 +321,13 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 
 	pr_debug("%s: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
-	if (local_pdata->on_cmds.cmd_cnt)
-		mdss_dsi_panel_cmds_send(ctrl, &local_pdata->on_cmds);
-	
+	mutex_lock(&panel_cmd_mutex);
+	if (local_ctrl->on_cmds.cmd_cnt)
+		mdss_dsi_panel_cmds_send(ctrl, &local_ctrl->on_cmds);
+	mutex_unlock(&panel_cmd_mutex);
+
+
+
 	pr_info("%s\n", __func__);
 	return 0;
 }
